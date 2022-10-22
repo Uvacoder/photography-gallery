@@ -1,11 +1,18 @@
 import { Box, Button, Container, Input, Typography } from "@mui/material";
-import React, { useRef, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ImagesList from "../../components/ImagesList";
 import ProgressList from "../../components/progress/ProgressList";
+import { firestore } from "../../firebase/firebaseClient";
 
 const Album = ({ auth }) => {
   const [files, setFiles] = useState([]);
+  const [album, setAlbum] = useState({});
   const fileRef = useRef();
+  const router = useLocation();
+
+  const albumId = router.pathname.split("/")[2];
 
   const handleClick = () => {
     fileRef.current.click();
@@ -16,6 +23,25 @@ const Album = ({ auth }) => {
     fileRef.current.value = null;
   };
 
+  console.log(files);
+
+  const getAlbum = async () => {
+    try {
+      const albumRef = doc(firestore, `albums/${albumId}`);
+      const albumDoc = await getDoc(albumRef);
+      setAlbum(() => ({ id: albumDoc.id, ...albumDoc.data() }));
+    } catch (error) {
+      console.log("getAlbum Error", error);
+    }
+  };
+
+  useEffect(() => {
+    getAlbum();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [albumId]);
+
+  console.log(album);
+
   return (
     <Container>
       <Box
@@ -23,10 +49,10 @@ const Album = ({ auth }) => {
         display="flex"
         alignItems="center"
         justifyContent="space-between"
-        marginBottom={3}
+        marginBottom={2}
       >
         <Typography fontSize="26px" fontWeight={600}>
-          Album Name
+          {album.title}
         </Typography>
         {auth && (
           <Box>
@@ -48,9 +74,9 @@ const Album = ({ auth }) => {
         )}
       </Box>
 
-      <ProgressList files={files} />
+      <ProgressList files={files} albumId={album.id} />
 
-      <ImagesList />
+      <ImagesList auth={auth} />
     </Container>
   );
 };

@@ -7,7 +7,15 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CreateAlbumModal from "../../components/modals/CreateAlbumModal";
@@ -22,8 +30,9 @@ const Albums = ({ auth, albums, setAlbums }) => {
 
   const createAlbum = async () => {
     try {
-      await setDoc(doc(collection(firestore, `albums`)), {
+      await setDoc(doc(collection(firestore, "albums")), {
         title: albumName,
+        createdAt: serverTimestamp(),
       });
       setAlbumCreated(true);
       handleClose();
@@ -33,7 +42,11 @@ const Albums = ({ auth, albums, setAlbums }) => {
   };
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(firestore, "albums"), (snap) => {
+    const albumsQuery = query(
+      collection(firestore, "albums"),
+      orderBy("createdAt", "desc")
+    );
+    const unsub = onSnapshot(albumsQuery, (snap) => {
       const albums = snap.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

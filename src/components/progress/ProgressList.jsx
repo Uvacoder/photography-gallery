@@ -2,11 +2,11 @@ import { ImageList } from "@mui/material";
 import React from "react";
 import ProgressItem from "./ProgressItem";
 
-const ProgressList = ({ files }) => {
+const ProgressList = ({ files, albumId }) => {
   return (
     <ImageList rowHeight={200} cols={4}>
       {files.map((file, i) => (
-        <ProgressItem key={i} file={file} />
+        <ProgressItem file={file} albumId={albumId} key={i} />
       ))}
     </ImageList>
   );
