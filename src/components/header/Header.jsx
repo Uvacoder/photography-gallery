@@ -84,7 +84,7 @@ function DrawerAppBar(props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar component="nav" position="fixed">
+      <AppBar component="nav" position="fixed" zIndex="100 !important">
         <Toolbar>
           <Box
             sx={{
@@ -112,7 +112,7 @@ function DrawerAppBar(props) {
 
             <Box
               sx={{
-                display: { xs: "none", sm: "block", md: "flex" },
+                display: { xs: "none", sm: "flex", md: "flex" },
                 alignItems: "center",
                 gap: "30px",
               }}

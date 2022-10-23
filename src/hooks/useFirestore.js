@@ -2,6 +2,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -91,12 +92,35 @@ const useFirestore = () => {
     return deleteObject(imageRef);
   };
 
+  const deleteUserFiles = (collectionName, albumId) => {
+    return new Promise(async (resolve, reject) => {
+      const q = query(collection(firestore, collectionName));
+      try {
+        const snapshot = await getDocs(q);
+        const storePromises = [];
+        const storagePromises = [];
+        snapshot.forEach((doc) => {
+          storePromises.push(deleteDocument(collectionName, doc.id));
+          storagePromises.push(deleteFile(`gallery/${albumId}/${doc.id}`));
+        });
+        await Promise.all(storePromises);
+        await Promise.all(storagePromises);
+
+        resolve();
+      } catch (error) {
+        console.log("deleteUserFiles Error", error);
+        reject(error);
+      }
+    });
+  };
+
   return {
     uploadFileProgress,
     addDocument,
     documents,
     deleteDocument,
     deleteFile,
+    deleteUserFiles,
   };
 };
 

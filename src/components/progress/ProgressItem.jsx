@@ -50,7 +50,12 @@ const ProgressItem = ({ file, albumId }) => {
   return (
     imageURL && (
       <ImageListItem cols={1} rows={1}>
-        <img src={imageURL} alt="" loading="lazy" />
+        <img
+          style={{ maxHeight: "200px" }}
+          src={imageURL}
+          alt=""
+          loading="lazy"
+        />
         <Box sx={backDrop}>
           {progress < 100 ? (
             <CircularProgressWithLabel value={progress} />

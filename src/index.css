@@ -33,3 +33,16 @@ code {
 a {
   text-decoration: none;
 }
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--second-bg-dark);
+  border-radius: 30px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}

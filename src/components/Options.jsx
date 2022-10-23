@@ -32,7 +32,21 @@ const Options = ({ imageId, albumId, imageURL, auth }) => {
     }
   };
 
-  const handleDownload = () => {};
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(imageURL);
+      const data = await response.blob();
+      const blob = URL.createObjectURL(data);
+      const link = document.createElement("a");
+      link.href = blob;
+      link.download = imageId;
+      link.click();
+      URL.revokeObjectURL(blob);
+      link.remove();
+    } catch (error) {
+      console.log("handleDownload Error", error);
+    }
+  };
 
   return (
     <>

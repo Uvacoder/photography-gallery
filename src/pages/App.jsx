@@ -1,5 +1,4 @@
 import "./App.css";
-import "react-image-gallery/styles/css/image-gallery.css";
 import {
   BrowserRouter as Router,
   Navigate,
