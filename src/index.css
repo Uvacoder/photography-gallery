@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Kurale:wght@400;&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@1,700&display=swap");
 
 :root {
@@ -32,6 +31,7 @@ code {
 
 a {
   text-decoration: none;
+  color: inherit;
 }
 
 ::-webkit-scrollbar {

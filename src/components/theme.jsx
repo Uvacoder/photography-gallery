@@ -7,6 +7,9 @@ const darkTheme = createTheme({
       main: "#349eff",
     },
   },
+  zIndex: {
+    appBar: 100,
+  },
 });
 
 export default darkTheme;

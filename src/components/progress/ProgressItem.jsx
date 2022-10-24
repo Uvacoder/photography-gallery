@@ -3,8 +3,7 @@ import { Box, ImageListItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CircularProgressWithLabel from "./CircularProgressWithLabel";
 import { v4 as uuid } from "uuid";
-import uploadFileProgress from "../../firebase/uploadFileProgress";
-import addDocument from "../../firebase/addDocument";
+import useFirestore from "../../hooks/useFirestore";
 
 const backDrop = {
   position: "absolute",
@@ -21,6 +20,7 @@ const backDrop = {
 const ProgressItem = ({ file, albumId }) => {
   const [progress, setProgress] = useState(0);
   const [imageURL, setImageURL] = useState(null);
+  const { uploadFileProgress, addDocument } = useFirestore();
 
   useEffect(() => {
     const uploadImage = async () => {

@@ -15,8 +15,6 @@ import Typography from "@mui/material/Typography";
 import logo1 from "../../img/logo2.png";
 import { Link, useNavigate } from "react-router-dom";
 
-import "./Header.css";
-
 const drawerWidth = 240;
 
 function DrawerAppBar(props) {
@@ -102,10 +100,15 @@ function DrawerAppBar(props) {
                 color: "var(--main-color-blue)",
                 marginTop: 1,
               }}
-              className="brandTitle"
             >
               <img src={logo1} alt="" height="60px" />
-              <Typography fontSize="20px" varient="h3" fontWeight={600}>
+
+              <Typography
+                fontSize="20px"
+                varient="h3"
+                fontWeight={600}
+                sx={{ fontFamily: "Raleway" }}
+              >
                 MR.FRAD
               </Typography>
             </Link>

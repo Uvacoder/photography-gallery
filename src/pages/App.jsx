@@ -12,6 +12,7 @@ import Header from "../components/header/Header";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Album from "./album/Album";
+import Footer from "../components/footer/Footer";
 
 const App = () => {
   const [auth, setAuth] = useState(false);
@@ -65,6 +66,7 @@ const App = () => {
           <Route path="/album/:albumId" element={<Album auth={auth} />} />
         </Routes>
       </div>
+      <Footer />
     </Router>
   );
 };
