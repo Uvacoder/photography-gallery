@@ -1,10 +1,14 @@
-import { Delete } from "@mui/icons-material";
+import { Delete, DownloadTwoTone, MoreHoriz } from "@mui/icons-material";
 import {
   Box,
   Button,
   Container,
   IconButton,
   Input,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
@@ -20,6 +24,8 @@ const Album = ({ auth }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
   const [files, setFiles] = useState([]);
   const [album, setAlbum] = useState({});
   const fileRef = useRef();
@@ -27,8 +33,17 @@ const Album = ({ auth }) => {
   const navigate = useNavigate();
   const { deleteUserFiles, deleteDocument } = useFirestore();
   const [loading, setLoading] = useState(false);
+  const { documents } = useFirestore();
 
   const albumId = router.pathname.split("/")[2];
+
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
 
   const handleClick = () => {
     fileRef.current.click();
@@ -69,7 +84,23 @@ const Album = ({ auth }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [albumId]);
 
-  console.log(album);
+  const handleDownloadAll = () => {
+    try {
+      documents.forEach(async (item) => {
+        const response = await fetch(item?.data?.imageURL);
+        const data = await response.blob();
+        const blob = URL.createObjectURL(data);
+        const link = document.createElement("a");
+        link.href = blob;
+        link.download = item.id;
+        link.click();
+        URL.revokeObjectURL(blob);
+        link.remove();
+      });
+    } catch (error) {
+      console.log("handleDownloadAll Error", error);
+    }
+  };
 
   return (
     <Container sx={{ paddingBottom: 6 }}>
@@ -83,38 +114,93 @@ const Album = ({ auth }) => {
         <Typography fontSize="26px" fontWeight={600}>
           {album.title}
         </Typography>
-        {auth && (
-          <Box display="flex" alignItems="center" gap="10px">
-            <Input
-              type="file"
-              inputProps={{ multiple: true }}
-              inputRef={fileRef}
-              onChange={handleChange}
-              sx={{ display: "none" }}
-            />
-            <Button
-              variant="contained"
-              sx={{ color: "white" }}
-              onClick={handleClick}
-            >
-              Upload Images
-            </Button>
-            <Box>
-              <IconButton
-                onClick={handleOpen}
-                sx={{ bgcolor: "rgba(0,0,0,.2)" }}
-              >
-                <Delete />
-              </IconButton>
-              <DeleteAlbumModal
-                open={open}
-                handleClose={handleClose}
-                handleDeleteAlbum={handleDeleteAlbum}
-                loading={loading}
+        <Box display="flex" alignItems="center" gap="10px">
+          {auth && (
+            <>
+              <Input
+                type="file"
+                inputProps={{ multiple: true }}
+                inputRef={fileRef}
+                onChange={handleChange}
+                sx={{ display: "none" }}
               />
+              <Button
+                variant="contained"
+                sx={{ color: "white" }}
+                onClick={handleClick}
+              >
+                Upload Images
+              </Button>
+            </>
+          )}
+          <Box>
+            <Box>
+              <Tooltip title="More Options">
+                <IconButton onClick={handleClickMenu}>
+                  <MoreHoriz />
+                </IconButton>
+              </Tooltip>
             </Box>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={openMenu}
+              onClose={handleCloseMenu}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  overflow: "visible",
+                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  mt: 1.5,
+                  bgcolor: "#202020",
+                  "& .MuiAvatar-root": {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  "&:before": {
+                    content: '""',
+                    display: "block",
+                    position: "absolute",
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: "background.paper",
+                    transform: "translateY(-50%) rotate(45deg)",
+                    zIndex: 0,
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              {auth && (
+                <>
+                  <MenuItem onClick={handleOpen}>
+                    <ListItemIcon>
+                      <Delete />
+                    </ListItemIcon>
+                    Delete Album
+                  </MenuItem>
+                  <DeleteAlbumModal
+                    open={open}
+                    handleClose={handleClose}
+                    handleDeleteAlbum={handleDeleteAlbum}
+                    loading={loading}
+                  />
+                </>
+              )}
+              <MenuItem onClick={handleDownloadAll}>
+                <ListItemIcon>
+                  <DownloadTwoTone />
+                </ListItemIcon>
+                Download All
+              </MenuItem>
+            </Menu>
           </Box>
-        )}
+        </Box>
       </Box>
 
       <ProgressList files={files} albumId={album.id} />
