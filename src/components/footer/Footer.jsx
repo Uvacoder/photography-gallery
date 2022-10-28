@@ -38,9 +38,13 @@ const Footer = () => {
           paddingBottom="25px"
         >
           <Box display="flex" justifyContent="center">
-            <Link to="/">
+            <a
+              href="https://www.instagram.com/mr._.frad"
+              target="_blank"
+              rel="noreferrer"
+            >
               <Instagram sx={{ color: "#e700b5" }} fontSize="large" />
-            </Link>
+            </a>
           </Box>
         </Grid>
         <Grid
@@ -138,8 +142,15 @@ const Footer = () => {
           fontSize={{ xs: "14px", sm: "15px" }}
           textAlign="center"
         >
-          Copyright © {new Date().getFullYear()} | All Rights Reserved | Made by
-          Abishiek
+          Copyright © {new Date().getFullYear()} | All Rights Reserved | Made by{" "}
+          <a
+            href="https://itsabishiek.vercel.app"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "#349eff", fontWeight: 600 }}
+          >
+            Abishiek
+          </a>
         </Typography>
       </Box>
     </Box>

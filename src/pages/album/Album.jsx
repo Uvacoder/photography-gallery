@@ -192,7 +192,12 @@ const Album = ({ auth }) => {
                   />
                 </>
               )}
-              <MenuItem onClick={handleDownloadAll}>
+              <MenuItem
+                onClick={() => {
+                  handleDownloadAll();
+                  handleCloseMenu();
+                }}
+              >
                 <ListItemIcon>
                   <DownloadTwoTone />
                 </ListItemIcon>
